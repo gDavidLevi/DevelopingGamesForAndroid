@@ -48,6 +48,7 @@ public class Player extends Ship {
      * @param textureBandOfHealth текстура полосы здоровья
      * @param textureJoystick     текстура джойстика
      * @param textureFireButton   текстура кнопки огонь
+     * @param textureMagicButton  текстура кнопки магия
      * @param fireSound           звук огня
      * @param position            позиция
      * @param velocity            скорость
@@ -132,7 +133,6 @@ public class Player extends Ship {
     public void fullRepair() {
         this.currentHealth = this.maxHealth;
     }
-
 
 
     @Override

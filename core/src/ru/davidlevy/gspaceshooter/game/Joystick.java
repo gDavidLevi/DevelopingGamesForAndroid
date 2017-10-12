@@ -47,6 +47,7 @@ public class Joystick {
      * @param player          игрок
      * @param textureJoystick текстура джойстика
      * @param textureFire     текстура кнопки ОГОНЬ
+     * @param textureMagic    текстура кнопки МАГИЯ
      */
     public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire, TextureRegion textureMagic) {
         this.player = player;
