@@ -96,7 +96,7 @@ public class Bot extends Ship implements Poolable {
         position.set(route.getInitialPosition());
         fireRate = 1.0f;
         hitArea.setRadius(28);
-        maxHealth = 15;
+        maxHealth = 10;
         currentHealth = maxHealth;
         active = true;
         this.route = route;

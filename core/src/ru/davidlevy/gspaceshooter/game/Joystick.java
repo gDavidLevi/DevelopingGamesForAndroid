@@ -1,6 +1,7 @@
 package ru.davidlevy.gspaceshooter.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -130,7 +131,8 @@ public class Joystick {
         chargingShield += dt * 3.0f;
         if (chargingShield >= this.maxShieldCharge) {
             /* Если нажата кнопка SHIELD, то активировать щит */
-            if (mip.isTouchedInArea(rectangleShield) != -1) {
+            if (mip.isTouchedInArea(rectangleShield) != -1 |
+                    Gdx.input.isKeyPressed(Input.Keys.M)) {
                 player.runShield();
                 chargingShield = 0.0f;
                 return;

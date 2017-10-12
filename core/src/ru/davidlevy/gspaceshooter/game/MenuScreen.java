@@ -21,8 +21,8 @@ public class MenuScreen implements Screen {
     private SpriteBatch batch;
     private Background background;
     private Vector2 emptyVelocity;
-
     private TextureAtlas atlas;
+    private TextureRegion atlasInfo;
 
     /* Кнопки */
     private TextureRegion atlasContinue;
@@ -56,6 +56,7 @@ public class MenuScreen implements Screen {
         Assets.getInstance().loadAssets(ScreenType.MENU);
         atlas = Assets.getInstance().mainAtlas;
 
+        atlasInfo = atlas.findRegion("help");
         background = new Background(atlas.findRegion("star16"));
 
         /* Кнопки */
@@ -81,6 +82,7 @@ public class MenuScreen implements Screen {
 
         batch.begin();
         background.render(batch);
+        batch.draw(atlasInfo, 500, 280);
         batch.draw(atlasContinue, rectanlgeContinue.x, rectanlgeContinue.y);
         batch.draw(atlasExit, rectanlgeExit.x, rectanlgeExit.y);
         batch.draw(atlasSaveStateGame, rectanlgeSaveStateGame.x, rectanlgeSaveStateGame.y);

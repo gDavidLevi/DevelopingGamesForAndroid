@@ -48,7 +48,7 @@ public class PowerUp {
      * @param player игрок
      */
     public void accrue(Player player) {
-        switch (type) {
+        switch (this.type) {
             case MONEY10:
                 player.addMoney(10);
                 break;

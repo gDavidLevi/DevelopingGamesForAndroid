@@ -166,9 +166,9 @@ public class Player extends Ship {
         if (Gdx.input.isKeyPressed(Input.Keys.L)) {
             pressFire(dt);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-            runShield();
-        }
+//        if (Gdx.input.isKeyPressed(Input.Keys.M)) {
+//            runShield();
+//        }
 
         /* Изменить цвет из-за столкновения */
         damageReaction -= dt * 2.0f;

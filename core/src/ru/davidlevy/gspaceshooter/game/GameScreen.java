@@ -352,6 +352,7 @@ public class GameScreen implements Screen {
                     if (asteroid.takeDamage(5)) {
                         /*... вознарадить игрока: */
                         player.addScore(asteroid.getMaxHealth() * 10);
+                        powerUpsEmitter.makePower(asteroid.getPosition().x, asteroid.getPosition().y);
                         boomEmitter.setup(asteroid.getPosition());
                     }
                     shield.deactivate();

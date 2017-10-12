@@ -10,9 +10,16 @@ explosion64
   orig: 512, 512
   offset: 0, 0
   index: -1
-btSaveStateGame
+powerUps
   rotate: false
   xy: 516, 2
+  size: 265, 32
+  orig: 265, 32
+  offset: 0, 0
+  index: -1
+btSaveStateGame
+  rotate: false
+  xy: 516, 36
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -38,86 +45,86 @@ btContinue
   orig: 256, 256
   offset: 0, 0
   index: -1
-joystick
-  rotate: false
-  xy: 774, 2
-  size: 200, 250
-  orig: 200, 250
-  offset: 0, 0
-  index: -1
-magic
-  rotate: false
-  xy: 516, 260
-  size: 224, 224
-  orig: 224, 224
-  offset: 0, 0
-  index: -1
-btFire
-  rotate: false
-  xy: 742, 260
-  size: 160, 160
-  orig: 160, 160
-  offset: 0, 0
-  index: -1
-btMenu
+help
   rotate: false
   xy: 2, 774
-  size: 192, 128
-  orig: 192, 128
-  offset: 0, 0
-  index: -1
-hpBar
-  rotate: false
-  xy: 2, 904
-  size: 224, 96
-  orig: 224, 96
-  offset: 0, 0
-  index: -1
-btShield
-  rotate: false
-  xy: 260, 774
-  size: 160, 96
-  orig: 160, 96
+  size: 256, 224
+  orig: 256, 224
   offset: 0, 0
   index: -1
 ufo
   rotate: false
-  xy: 260, 872
+  xy: 516, 294
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
+magic
+  rotate: false
+  xy: 774, 36
+  size: 224, 224
+  orig: 224, 224
+  offset: 0, 0
+  index: -1
+hpBar
+  rotate: false
+  xy: 516, 360
+  size: 224, 96
+  orig: 224, 96
+  offset: 0, 0
+  index: -1
+joystick
+  rotate: false
+  xy: 774, 262
+  size: 200, 250
+  orig: 200, 250
+  offset: 0, 0
+  index: -1
+btMenu
+  rotate: false
+  xy: 260, 774
+  size: 192, 128
+  orig: 192, 128
+  offset: 0, 0
+  index: -1
+btFire
+  rotate: false
+  xy: 776, 516
+  size: 160, 160
+  orig: 160, 160
+  offset: 0, 0
+  index: -1
+btShield
+  rotate: false
+  xy: 260, 904
+  size: 160, 96
+  orig: 160, 96
+  offset: 0, 0
+  index: -1
+bullets36
+  rotate: false
+  xy: 516, 458
+  size: 72, 36
+  orig: 72, 36
+  offset: 0, 0
+  index: -1
 ship64
   rotate: false
-  xy: 742, 422
+  xy: 422, 904
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 asteroid64
   rotate: false
-  xy: 808, 422
+  xy: 938, 516
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-bullets36
-  rotate: false
-  xy: 904, 260
-  size: 72, 36
-  orig: 72, 36
-  offset: 0, 0
-  index: -1
-powerUps
-  rotate: false
-  xy: 518, 774
-  size: 265, 32
-  orig: 265, 32
-  offset: 0, 0
-  index: -1
 star16
   rotate: false
-  xy: 976, 2
+  xy: 783, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
