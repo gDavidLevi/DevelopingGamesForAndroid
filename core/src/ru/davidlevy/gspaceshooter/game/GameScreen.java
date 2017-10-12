@@ -41,7 +41,7 @@ public class GameScreen implements Screen {
     private ParticleEmitter particleEmitter;
     private BoomEmitter boomEmitter;
     private BotEmitter botEmitter;
-    private MagicEmitter magicEmitter;
+    private ShieldEmitter shieldEmitter;
 
     /* Уровень игры */
     private List<LevelInfo> levels;
@@ -112,7 +112,7 @@ public class GameScreen implements Screen {
         particleEmitter = new ParticleEmitter(atlas.findRegion("star16"));
         boomEmitter = new BoomEmitter(atlas.findRegion("explosion64"),
                 Assets.getInstance().assetManager.get("CollapseNorm.wav", Sound.class));
-        magicEmitter = new MagicEmitter(this, atlas.findRegion("magic"), 3);
+        shieldEmitter = new ShieldEmitter(this, atlas.findRegion("magic"), 3);
 
         atlasMenu = atlas.findRegion("btMenu");
         rectanlgeMenu = new Rectangle(20, 490, atlasMenu.getRegionWidth(), atlasMenu.getRegionHeight());
@@ -130,7 +130,7 @@ public class GameScreen implements Screen {
                 atlas.findRegion("hpBar"),
                 atlas.findRegion("joystick"),
                 atlas.findRegion("btFire"),
-                atlas.findRegion("btMagic"),
+                atlas.findRegion("btShield"),
                 Assets.getInstance().assetManager.get("laser.wav", Sound.class),
                 new Vector2(100, 328),
                 new Vector2(0.0f, 0.0f),
@@ -216,7 +216,7 @@ public class GameScreen implements Screen {
         powerUpsEmitter.render(batch);
         boomEmitter.render(batch);
         particleEmitter.render(batch);
-        magicEmitter.render(batch);
+        shieldEmitter.render(batch);
         batch.end();
     }
 
@@ -251,7 +251,7 @@ public class GameScreen implements Screen {
         powerUpsEmitter.update(dt);
         particleEmitter.update(dt);
         boomEmitter.update(dt);
-        magicEmitter.update(dt);
+        shieldEmitter.update(dt);
 
         checkCollision();
 
@@ -260,7 +260,7 @@ public class GameScreen implements Screen {
         botEmitter.actualizationPool();
         bulletEmitter.actualizationPool();
         particleEmitter.actualizationPool();
-        magicEmitter.actualizationPool();
+        shieldEmitter.actualizationPool();
     }
 
 
@@ -339,22 +339,22 @@ public class GameScreen implements Screen {
             }
         }
 
-        /* Магия + астероиды */
-        int quantityActivesMagic = magicEmitter.getActiveList().size();
+        /* Щит + астероиды */
+        int quantityActivesMagic = shieldEmitter.getActiveList().size();
         for (int i = 0; i < quantityActivesMagic; i++) {
-            Magic magic = magicEmitter.getActiveList().get(i);
+            Shield shield = shieldEmitter.getActiveList().get(i);
             int quantity = asteroidEmitter.getActiveList().size();
             for (int j = 0; j < quantity; j++) {
                 Asteroid asteroid = asteroidEmitter.getActiveList().get(j);
-                /* Если попал в зану магии, то... */
-                if (magic.getHitArea().contains(asteroid.getPosition())) {
+                /* Если попал в зону щита, то... */
+                if (shield.getHitArea().contains(asteroid.getPosition())) {
                     /*... и если астероид уничтожен, то... */
                     if (asteroid.takeDamage(5)) {
                         /*... вознарадить игрока: */
                         player.addScore(asteroid.getMaxHealth() * 10);
-                        boomEmitter.setup(asteroid.getPosition()); // взрыв
+                        boomEmitter.setup(asteroid.getPosition());
                     }
-                    magic.deactivate();
+                    shield.deactivate();
                     break;
                 }
             }
@@ -396,8 +396,8 @@ public class GameScreen implements Screen {
         return this.particleEmitter;
     }
 
-    public MagicEmitter getMagicEmitter() {
-        return this.magicEmitter;
+    public ShieldEmitter getShieldEmitter() {
+        return this.shieldEmitter;
     }
 
     public int getCurrentLevel() {

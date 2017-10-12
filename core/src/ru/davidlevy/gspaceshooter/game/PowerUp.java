@@ -20,7 +20,7 @@ public class PowerUp {
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
         this.currentTime = 0.0f;
-        this.maxTimeOfLife = 3.0f;
+        this.maxTimeOfLife = 5.0f;
         this.active = false;
     }
 
@@ -35,7 +35,6 @@ public class PowerUp {
         this.type = type;
         this.velocity.set(MathUtils.random(-50.0f, 50.0f), MathUtils.random(-50.0f, 50.0f));
         this.currentTime = 0.0f;
-        this.maxTimeOfLife = 3.0f;
         this.active = true;
     }
 
@@ -46,24 +45,24 @@ public class PowerUp {
     /**
      * Начислить плюшки игроку
      *
-     * @param hero игрок
+     * @param player игрок
      */
-    public void accrue(Player hero) {
+    public void accrue(Player player) {
         switch (type) {
             case MONEY10:
-                hero.addMoney(10);
+                player.addMoney(10);
                 break;
             case MONEY25:
-                hero.addMoney(25);
+                player.addMoney(25);
                 break;
             case MONEY50:
-                hero.addMoney(50);
+                player.addMoney(50);
                 break;
             case MEDKIT:
-                hero.fullRepair();
+                player.fullRepair();
                 break;
-            case MAGIC:
-                hero.magicShield();
+            case SHIELD:
+                player.runShield();
                 break;
         }
     }

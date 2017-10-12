@@ -48,13 +48,13 @@ public class Player extends Ship {
      * @param textureBandOfHealth текстура полосы здоровья
      * @param textureJoystick     текстура джойстика
      * @param textureFireButton   текстура кнопки огонь
-     * @param textureMagicButton  текстура кнопки магия
+     * @param textureShieldButton  текстура кнопки магия
      * @param fireSound           звук огня
      * @param position            позиция
      * @param velocity            скорость
      * @param enginePower         мощность
      */
-    public Player(GameScreen gameScreen, TextureRegion texturePlayer, TextureRegion textureBandOfHealth, TextureRegion textureJoystick, TextureRegion textureFireButton, TextureRegion textureMagicButton, Sound fireSound, Vector2 position, Vector2 velocity, float enginePower) {
+    public Player(GameScreen gameScreen, TextureRegion texturePlayer, TextureRegion textureBandOfHealth, TextureRegion textureJoystick, TextureRegion textureFireButton, TextureRegion textureShieldButton, Sound fireSound, Vector2 position, Vector2 velocity, float enginePower) {
         /* SpaceObject */
         super.maxHealth = 40;
         super.currentHealth = this.maxHealth;
@@ -71,7 +71,7 @@ public class Player extends Ship {
         this.texturePlayer = texturePlayer;
         this.textureRedBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 32, 224, 32);
         this.textureGreenBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 0, 224, 32);
-        this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureMagicButton);
+        this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureShieldButton, this.textureGreenBandOfHealth);
         this.fireSound = fireSound;
         this.position = position;
         this.velocity = velocity;
@@ -167,7 +167,7 @@ public class Player extends Ship {
             pressFire(dt);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-            magicShield();
+            runShield();
         }
 
         /* Изменить цвет из-за столкновения */
@@ -254,7 +254,7 @@ public class Player extends Ship {
         fireSound.dispose();
     }
 
-    public void magicShield() {
-        this.gameScreen.getMagicEmitter().setup();
+    public void runShield() {
+        this.gameScreen.getShieldEmitter().setup();
     }
 }

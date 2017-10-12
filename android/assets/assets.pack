@@ -10,28 +10,28 @@ explosion64
   orig: 512, 512
   offset: 0, 0
   index: -1
-btNewStateGame
+btSaveStateGame
   rotate: false
   xy: 516, 2
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
-btSaveStateGame
+btNewStateGame
   rotate: false
   xy: 2, 516
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
-btContinue
+btExit
   rotate: false
   xy: 260, 516
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
-btExit
+btContinue
   rotate: false
   xy: 518, 516
   size: 256, 256
@@ -73,7 +73,7 @@ hpBar
   orig: 224, 96
   offset: 0, 0
   index: -1
-btMagic
+btShield
   rotate: false
   xy: 260, 774
   size: 160, 96

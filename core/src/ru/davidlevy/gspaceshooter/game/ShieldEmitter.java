@@ -4,23 +4,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
- * Класс MagicEmitter
+ * Класс ShieldEmitter
  *
  * @see ObjectPool пул объектов
  */
-public class MagicEmitter extends ObjectPool<Magic> {
+public class ShieldEmitter extends ObjectPool<Shield> {
     private GameScreen gameScreen;
-    private TextureRegion magicTexture;
+    private TextureRegion textureShield;
 
     @Override
-    protected Magic newObject() {
-        return new Magic(gameScreen, magicTexture);
+    protected Shield newObject() {
+        return new Shield(gameScreen, textureShield);
     }
 
-    public MagicEmitter(GameScreen gameScreen, TextureRegion magicTexture, int poolSize) {
+    public ShieldEmitter(GameScreen gameScreen, TextureRegion textureShield, int poolSize) {
         super();
         this.gameScreen = gameScreen;
-        this.magicTexture = magicTexture;
+        this.textureShield = textureShield;
 
         /* Создание объектов */
         for (int i = 0; i < poolSize; i++)
@@ -44,9 +44,9 @@ public class MagicEmitter extends ObjectPool<Magic> {
      * Установка
      */
     public void setup() {
-        Magic magic = getActiveElement();
-        /* Активация магии вокруг игрока */
-        magic.activate();
+        Shield shield = getActiveElement();
+        /* Активация щита вокруг игрока */
+        shield.activate();
     }
 
 }

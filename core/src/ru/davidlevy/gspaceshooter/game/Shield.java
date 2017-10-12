@@ -10,9 +10,9 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 /**
- * Класс Magic (магический круг)
+ * Класс SHIELD (магический круг)
  */
-public class Magic implements Poolable {
+public class Shield implements Poolable {
     private GameScreen gameScreen;
     private TextureRegion texture;
     private Vector2 position;
@@ -26,7 +26,7 @@ public class Magic implements Poolable {
      * @param gameScreen экран игры
      * @param texture    текстура
      */
-    public Magic(GameScreen gameScreen, TextureRegion texture) {
+    public Shield(GameScreen gameScreen, TextureRegion texture) {
         this.gameScreen = gameScreen;
         this.texture = texture;
         this.position = new Vector2(0, 0);
@@ -42,8 +42,8 @@ public class Magic implements Poolable {
     }
 
     public void update(float dt) {
-        scale += dt * 4.0f;
-        if (scale > 8.0) {
+        scale += dt * 5.0f;
+        if (scale > 8.0f) {
             scale = 0.0f;
             active = false;
         }

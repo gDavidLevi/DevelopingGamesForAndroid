@@ -6,8 +6,8 @@
 В финальный проект добавлено:
 1. сохрание состояния игрока
 2. комментарии 
-3. массовое уничтожение астероидов, см. кнопка "MAGIC"
-4. добавил powerUp "MAGIC"
+3. кнопка "SHIELD" и полосу зарядки щита
+4. добавил powerUp "SHIELD"
 5. подключил JavaDocs https://gdavidlevy.github.io/DevelopingGamesForAndroid/
 
 

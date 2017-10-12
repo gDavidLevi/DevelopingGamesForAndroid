@@ -43,7 +43,7 @@ public class PowerUpsEmitter {
 
     public void makePower(float x, float y) {
         /* Вероятность появления плющек */
-        if (Math.random() < 0.5) {
+        if (Math.random() < 0.9) {
             for (int i = 0; i < NUMBERS_OF_POWERUPS; i++) {
                 /* Если плюшка неактивна, то... */
                 if (!powerUps[i].isActive()) {

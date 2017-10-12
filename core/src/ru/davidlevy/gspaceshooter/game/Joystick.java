@@ -14,14 +14,15 @@ public class Joystick {
     private TextureRegion textureBase;
     private TextureRegion textureStick;
     private TextureRegion textureFire;
-    private TextureRegion textureMagic;
+    private TextureRegion textureShield;
+    private TextureRegion textureShieldHealth;
 
     /* Кнопка джойстика */
     private Rectangle rectangleJoystick;
 
     /* Кнопки */
     private Rectangle rectangleFire;
-    private Rectangle rectangleMagic;
+    private Rectangle rectangleShield;
 
     /* Центр джойстика */
     private float joyCenterX;
@@ -36,6 +37,12 @@ public class Joystick {
     /* Направление textureStick */
     private Vector2 norm;
 
+    /* Зарядка щита */
+    private float chargingShield;
+
+    /* Максимальный заряд щита */
+    private float maxShieldCharge;
+
     /* Процессор ввода */
     private MyInputProcessor mip;
 
@@ -44,12 +51,13 @@ public class Joystick {
     }
 
     /**
-     * @param player          игрок
-     * @param textureJoystick текстура джойстика
-     * @param textureFire     текстура кнопки ОГОНЬ
-     * @param textureMagic    текстура кнопки МАГИЯ
+     * @param player              игрок
+     * @param textureJoystick     текстура джойстика
+     * @param textureFire         текстура кнопки ОГОНЬ
+     * @param textureShield       текстура кнопки ЩИТ
+     * @param textureShieldHealth текстура полосы здоровья ЩИТа
      */
-    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire, TextureRegion textureMagic) {
+    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire, TextureRegion textureShield, TextureRegion textureShieldHealth) {
         this.player = player;
 
         this.textureBase = new TextureRegion(textureJoystick, 0, 0, 200, 200);
@@ -60,8 +68,10 @@ public class Joystick {
         this.textureFire = textureFire;
         this.rectangleFire = new Rectangle(1050, 70, textureFire.getRegionHeight(), textureFire.getRegionWidth());
 
-        this.textureMagic = textureMagic;
-        this.rectangleMagic = new Rectangle(550, 80, textureMagic.getRegionHeight(), textureMagic.getRegionWidth());
+        this.textureShield = textureShield;
+        this.rectangleShield = new Rectangle(550, 80, textureShield.getRegionHeight(), textureShield.getRegionWidth());
+
+        this.textureShieldHealth = textureShieldHealth;
 
         this.joyCenterX = rectangleJoystick.x + rectangleJoystick.width / 2;
         this.joyCenterY = rectangleJoystick.y + rectangleJoystick.height / 2;
@@ -71,16 +81,21 @@ public class Joystick {
 
         /* Ни один тач не нажат */
         this.touchId = -1;
+
+        this.chargingShield = 0.0f;
+        this.maxShieldCharge = 10.0f;
     }
 
     public void render(SpriteBatch batch) {
+        batch.draw(textureShieldHealth, rectangleShield.x, rectangleShield.y,
+                (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
         batch.setColor(1, 1, 1, 0.5f);
         batch.draw(textureBase, rectangleJoystick.x, rectangleJoystick.y);
         batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureStick, joyCenterX + offset.x - 25, joyCenterY + offset.y - 25);
         batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureFire, rectangleFire.x, rectangleFire.y);
-        batch.draw(textureMagic, rectangleMagic.x, rectangleMagic.y);
+        batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
         batch.setColor(1, 1, 1, 1);
     }
 
@@ -111,8 +126,17 @@ public class Joystick {
         /* Если зажата кнопка FIRE, то производить огонь */
         if (mip.isTouchedInArea(rectangleFire) != -1) player.pressFire(dt);
 
-         /* Если зажата кнопка MAGIC, то активировать волшебство */
-        if (mip.isTouchedInArea(rectangleMagic) != -1) player.magicShield();
+        /* Заряжаем щит */
+        chargingShield += dt * 3.0f;
+        if (chargingShield >= this.maxShieldCharge) {
+            /* Если нажата кнопка SHIELD, то активировать щит */
+            if (mip.isTouchedInArea(rectangleShield) != -1) {
+                player.runShield();
+                chargingShield = 0.0f;
+                return;
+            }
+            chargingShield = this.maxShieldCharge;
+        }
     }
 
     /**
