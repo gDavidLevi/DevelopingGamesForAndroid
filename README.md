@@ -8,5 +8,6 @@
 2. комментарии 
 3. массовое уничтожение астероидов, см. кнопка "MAGIC"
 4. добавил powerUp "MAGIC"
+5. подключил JavaDocs https://gdavidlevy.github.io/DevelopingGamesForAndroid/
 
-JavaDocs https://gdavidlevy.github.io/DevelopingGamesForAndroid/
+
