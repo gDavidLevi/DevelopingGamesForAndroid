@@ -10,4 +10,12 @@
 4. добавил powerUp "SHIELD"
 5. подключил JavaDocs https://gdavidlevy.github.io/DevelopingGamesForAndroid/
 
+![alt text](docs/screenshot1.png)
+
+![alt text](docs/screenshot2.png)
+
+![alt text](docs/screenshot3.png)
+
+![alt text](docs/screenshot4.png)
+
 
