@@ -59,7 +59,7 @@ ufo
   orig: 256, 64
   offset: 0, 0
   index: -1
-magic
+shield
   rotate: false
   xy: 774, 36
   size: 224, 224

@@ -41,12 +41,11 @@ public class ShieldEmitter extends ObjectPool<Shield> {
     }
 
     /**
-     * Установка
+     * Установка щита вокруг игрока
      */
     public void setup() {
-        Shield shield = getActiveElement();
-        /* Активация щита вокруг игрока */
-        shield.activate();
+        Shield shield1 = getActiveElement();
+        shield1.activate();
     }
 
 }

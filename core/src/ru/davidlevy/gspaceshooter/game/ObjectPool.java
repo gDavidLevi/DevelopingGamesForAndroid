@@ -57,8 +57,7 @@ public abstract class ObjectPool<T extends Poolable> {
      * @return T
      */
     public T getActiveElement() {
-        if (inactiveList.size() == 0)
-            inactiveList.add(newObject());
+        if (inactiveList.size() == 0) inactiveList.add(newObject());
         T element = inactiveList.remove(inactiveList.size() - 1);
         activeList.add(element);
         return element;

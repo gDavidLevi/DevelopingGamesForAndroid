@@ -6,11 +6,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by david on 12.10.17.
- */
-
-/**
- * Класс SHIELD (магический круг)
+ * Класс SHIELD (щит)
  */
 public class Shield implements Poolable {
     private GameScreen gameScreen;
@@ -42,13 +38,14 @@ public class Shield implements Poolable {
     }
 
     public void update(float dt) {
-        scale += dt * 5.0f;
+        scale += dt * 4.0f;
         if (scale > 8.0f) {
             scale = 0.0f;
-            active = false;
+            deactivate();
         }
+
         position.set(gameScreen.getPlayer().position);
-        hitArea.set(position, scale * 35f);
+        hitArea.set(position, scale * 40f);
         position.mulAdd(velocity, dt);
     }
 
@@ -65,7 +62,7 @@ public class Shield implements Poolable {
         this.active = true;
     }
 
-    public void deactivate() {
+    private void deactivate() {
         this.active = false;
     }
 

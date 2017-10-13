@@ -48,7 +48,7 @@ public class Player extends Ship {
      * @param textureBandOfHealth текстура полосы здоровья
      * @param textureJoystick     текстура джойстика
      * @param textureFireButton   текстура кнопки огонь
-     * @param textureShieldButton  текстура кнопки магия
+     * @param textureShieldButton текстура кнопки магия
      * @param fireSound           звук огня
      * @param position            позиция
      * @param velocity            скорость

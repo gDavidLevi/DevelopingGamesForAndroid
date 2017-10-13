@@ -84,7 +84,7 @@ public class Joystick {
         this.touchId = -1;
 
         this.chargingShield = 0.0f;
-        this.maxShieldCharge = 10.0f;
+        this.maxShieldCharge = 5.0f; // секунд
     }
 
     public void render(SpriteBatch batch) {
@@ -128,7 +128,7 @@ public class Joystick {
         if (mip.isTouchedInArea(rectangleFire) != -1) player.pressFire(dt);
 
         /* Заряжаем щит */
-        chargingShield += dt * 3.0f;
+        chargingShield += dt;
         if (chargingShield >= this.maxShieldCharge) {
             /* Если нажата кнопка SHIELD, то активировать щит */
             if (mip.isTouchedInArea(rectangleShield) != -1 |

@@ -112,7 +112,7 @@ public class GameScreen implements Screen {
         particleEmitter = new ParticleEmitter(atlas.findRegion("star16"));
         boomEmitter = new BoomEmitter(atlas.findRegion("explosion64"),
                 Assets.getInstance().assetManager.get("CollapseNorm.wav", Sound.class));
-        shieldEmitter = new ShieldEmitter(this, atlas.findRegion("magic"), 3);
+        shieldEmitter = new ShieldEmitter(this, atlas.findRegion("shield"), 1);
 
         atlasMenu = atlas.findRegion("btMenu");
         rectanlgeMenu = new Rectangle(20, 490, atlasMenu.getRegionWidth(), atlasMenu.getRegionHeight());
@@ -201,22 +201,23 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(spaceGame.getCamera().combined);
 
         batch.begin();
-        background.render(batch);
-        player.render(batch);
-        player.renderDashboard(batch, bitmapFont, 20, 660);
-        bitmapFont.draw(batch, "LEVEL " + currentLevel, 570, 690);
+        {
+            /* -задний план- */
+            background.render(batch);
+            asteroidEmitter.render(batch);
+            botEmitter.render(batch);
+            bulletEmitter.render(batch);
+            powerUpsEmitter.render(batch);
+            boomEmitter.render(batch);
+            particleEmitter.render(batch);
+            shieldEmitter.render(batch);
 
-        /* Кнопка */
-        batch.draw(atlasMenu, rectanlgeMenu.x, rectanlgeMenu.y);
-
-        /* Эмиттеры  */
-        asteroidEmitter.render(batch);
-        botEmitter.render(batch);
-        bulletEmitter.render(batch);
-        powerUpsEmitter.render(batch);
-        boomEmitter.render(batch);
-        particleEmitter.render(batch);
-        shieldEmitter.render(batch);
+            /* -передний план- */
+            player.render(batch);
+            player.renderDashboard(batch, bitmapFont, 20, 660);
+            bitmapFont.draw(batch, "LEVEL " + currentLevel, 570, 690);
+            batch.draw(atlasMenu, rectanlgeMenu.x, rectanlgeMenu.y);
+        }
         batch.end();
     }
 
@@ -244,7 +245,6 @@ public class GameScreen implements Screen {
 
         /* Эмиттеры */
         background.update(dt, player.getVelocity());
-        player.update(dt);
         asteroidEmitter.update(dt);
         botEmitter.update(dt);
         bulletEmitter.update(dt);
@@ -252,6 +252,7 @@ public class GameScreen implements Screen {
         particleEmitter.update(dt);
         boomEmitter.update(dt);
         shieldEmitter.update(dt);
+        player.update(dt);
 
         checkCollision();
 
@@ -340,8 +341,8 @@ public class GameScreen implements Screen {
         }
 
         /* Щит + астероиды */
-        int quantityActivesMagic = shieldEmitter.getActiveList().size();
-        for (int i = 0; i < quantityActivesMagic; i++) {
+        int quantityActivesShields = shieldEmitter.getActiveList().size();
+        for (int i = 0; i < quantityActivesShields; i++) {
             Shield shield = shieldEmitter.getActiveList().get(i);
             int quantity = asteroidEmitter.getActiveList().size();
             for (int j = 0; j < quantity; j++) {
@@ -355,12 +356,10 @@ public class GameScreen implements Screen {
                         powerUpsEmitter.makePower(asteroid.getPosition().x, asteroid.getPosition().y);
                         boomEmitter.setup(asteroid.getPosition());
                     }
-                    shield.deactivate();
                     break;
                 }
             }
         }
-
 
         /* "Столкновение" PowerUp'ов с игроком */
         int quantityPowerUps = powerUpsEmitter.getPowerUps().length;
