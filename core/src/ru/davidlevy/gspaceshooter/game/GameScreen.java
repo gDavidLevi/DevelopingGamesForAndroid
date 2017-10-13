@@ -118,7 +118,7 @@ public class GameScreen implements Screen {
         rectanlgeMenu = new Rectangle(20, 490, atlasMenu.getRegionWidth(), atlasMenu.getRegionHeight());
 
         this.currentLevelTime = 0.0f;
-        this.timePerLevel = 60.0f;
+        this.timePerLevel = 60.0f; // 60 секунд на 1 уровень
         loadGameLevelInfo();
     }
 

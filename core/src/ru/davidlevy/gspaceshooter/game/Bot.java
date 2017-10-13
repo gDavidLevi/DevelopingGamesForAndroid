@@ -74,7 +74,7 @@ public class Bot extends Ship implements Poolable {
         /* Бот стреляет */
         pressFire(dt);
 
-        damageReaction -= dt * 2.0f;
+        damageReaction -= dt * 1.0f;
         if (damageReaction < 0.0f) damageReaction = 0.0f;
 
         if (position.x < -100) deactivate();

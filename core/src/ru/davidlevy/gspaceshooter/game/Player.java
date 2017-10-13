@@ -76,7 +76,7 @@ public class Player extends Ship {
         this.position = position;
         this.velocity = velocity;
         this.enginePower = enginePower;
-        this.currentLives = 3;
+        this.currentLives = 5;
         this.infoBandOfHealth = new StringBuilder(50);
         this.score = 0;
         this.money = 0;
@@ -166,9 +166,6 @@ public class Player extends Ship {
         if (Gdx.input.isKeyPressed(Input.Keys.L)) {
             pressFire(dt);
         }
-//        if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-//            runShield();
-//        }
 
         /* Изменить цвет из-за столкновения */
         damageReaction -= dt * 2.0f;
