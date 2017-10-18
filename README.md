@@ -8,7 +8,7 @@
 2. комментарии 
 3. кнопка "SHIELD" и полосу зарядки щита
 4. добавил powerUp "SHIELD"
-5. подключил JavaDocs https://gdavidlevy.github.io/DevelopingGamesForAndroid/
+5. подключил JavaDocs https://gdavidlevi.github.io/DevelopingGamesForAndroid/
 
 ![alt text](docs/screenshot1.png)
 
