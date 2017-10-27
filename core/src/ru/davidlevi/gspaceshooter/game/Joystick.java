@@ -15,15 +15,19 @@ public class Joystick {
     private TextureRegion textureBase;
     private TextureRegion textureStick;
     private TextureRegion textureFire;
-    private TextureRegion textureShield;
-    private TextureRegion textureShieldHealth;
+
+    // todo поля щита (5)
+    //private TextureRegion textureShield;
+    //private TextureRegion textureShieldHealth;
+    //private float chargingShield;
+    //private float maxShieldCharge;
+    //private Rectangle rectangleShield;
 
     /* Кнопка джойстика */
     private Rectangle rectangleJoystick;
 
     /* Кнопки */
     private Rectangle rectangleFire;
-    private Rectangle rectangleShield;
 
     /* Центр джойстика */
     private float joyCenterX;
@@ -38,12 +42,6 @@ public class Joystick {
     /* Направление textureStick */
     private Vector2 norm;
 
-    /* Зарядка щита */
-    private float chargingShield;
-
-    /* Максимальный заряд щита */
-    private float maxShieldCharge;
-
     /* Процессор ввода */
     private MyInputProcessor mip;
 
@@ -52,13 +50,11 @@ public class Joystick {
     }
 
     /**
-     * @param player              игрок
-     * @param textureJoystick     текстура джойстика
-     * @param textureFire         текстура кнопки ОГОНЬ
-     * @param textureShield       текстура кнопки ЩИТ
-     * @param textureShieldHealth текстура полосы здоровья ЩИТа
+     * @param player          игрок
+     * @param textureJoystick текстура джойстика
+     * @param textureFire     текстура кнопки ОГОНЬ
      */
-    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire, TextureRegion textureShield, TextureRegion textureShieldHealth) {
+    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire) {
         this.player = player;
 
         this.textureBase = new TextureRegion(textureJoystick, 0, 0, 200, 200);
@@ -69,10 +65,12 @@ public class Joystick {
         this.textureFire = textureFire;
         this.rectangleFire = new Rectangle(1050, 70, textureFire.getRegionHeight(), textureFire.getRegionWidth());
 
-        this.textureShield = textureShield;
-        this.rectangleShield = new Rectangle(550, 80, textureShield.getRegionHeight(), textureShield.getRegionWidth());
-
-        this.textureShieldHealth = textureShieldHealth;
+        // todo Отключаю инициализацию полей щита
+        //this.textureShield = textureShield;
+        //this.rectangleShield = new Rectangle(550, 80, textureShield.getRegionHeight(), textureShield.getRegionWidth());
+        //this.textureShieldHealth = textureShieldHealth;
+        //this.chargingShield = 0.0f;
+        //this.maxShieldCharge = 5.0f; // секунд
 
         this.joyCenterX = rectangleJoystick.x + rectangleJoystick.width / 2;
         this.joyCenterY = rectangleJoystick.y + rectangleJoystick.height / 2;
@@ -82,21 +80,19 @@ public class Joystick {
 
         /* Ни один тач не нажат */
         this.touchId = -1;
-
-        this.chargingShield = 0.0f;
-        this.maxShieldCharge = 5.0f; // секунд
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(textureShieldHealth, rectangleShield.x, rectangleShield.y,
-                (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
-        batch.setColor(1, 1, 1, 0.5f);
+        // todo Отключаю отрисовку полосы здоровья (2)
+        //batch.draw(textureShieldHealth, rectangleShield.x, rectangleShield.y, (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
+        //batch.setColor(1, 1, 1, 0.5f);
         batch.draw(textureBase, rectangleJoystick.x, rectangleJoystick.y);
         batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureStick, joyCenterX + offset.x - 25, joyCenterY + offset.y - 25);
         batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureFire, rectangleFire.x, rectangleFire.y);
-        batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
+        // todo Отключаю трисовку щита (1д)
+        //batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
         batch.setColor(1, 1, 1, 1);
     }
 
@@ -127,18 +123,19 @@ public class Joystick {
         /* Если зажата кнопка FIRE, то производить огонь */
         if (mip.isTouchedInArea(rectangleFire) != -1) player.pressFire(dt);
 
+        // todo Отключаю заряд щита и теакцию на клавишу М (12)
         /* Заряжаем щит */
-        chargingShield += dt;
-        if (chargingShield >= this.maxShieldCharge) {
-            /* Если нажата кнопка SHIELD, то активировать щит */
-            if (mip.isTouchedInArea(rectangleShield) != -1 |
-                    Gdx.input.isKeyPressed(Input.Keys.M)) {
-                player.runShield();
-                chargingShield = 0.0f;
-                return;
-            }
-            chargingShield = this.maxShieldCharge;
-        }
+//        chargingShield += dt;
+//        if (chargingShield >= this.maxShieldCharge) {
+//            /* Если нажата кнопка SHIELD, то активировать щит */
+//            if (mip.isTouchedInArea(rectangleShield) != -1 |
+//                    Gdx.input.isKeyPressed(Input.Keys.M)) {
+//                player.runShield();
+//                chargingShield = 0.0f;
+//                return;
+//            }
+//            chargingShield = this.maxShieldCharge;
+//        }
     }
 
     /**

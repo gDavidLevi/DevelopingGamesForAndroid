@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.StringBuilder;
 
@@ -42,6 +43,21 @@ public class Player extends Ship {
     /* Внутреннее время игрока */
     //private float time;
 
+    // todo поля щита (5)
+    private TextureRegion textureShield;
+    private TextureRegion textureShieldHealth;
+    private float chargingShield;
+    private float maxShieldCharge;
+    private Rectangle rectangleShield;
+
+    /* Процессор ввода */
+    private MyInputProcessor mip;
+
+    {
+        this.mip = (MyInputProcessor) Gdx.input.getInputProcessor();
+    }
+
+
     /**
      * @param gameScreen          экран игры
      * @param texturePlayer       текстура игрока
@@ -71,7 +87,10 @@ public class Player extends Ship {
         this.texturePlayer = texturePlayer;
         this.textureRedBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 32, 224, 32);
         this.textureGreenBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 0, 224, 32);
-        this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureShieldButton, this.textureGreenBandOfHealth);
+        // todo Убираю возможность у джойстика управления щитом
+        //this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureShieldButton, this.textureGreenBandOfHealth);
+        this.joystick = new Joystick(this, textureJoystick, textureFireButton);
+
         this.fireSound = fireSound;
         this.position = position;
         this.velocity = velocity;
@@ -81,6 +100,13 @@ public class Player extends Ship {
         this.score = 0;
         this.money = 0;
         //this.time = 0.0f;
+
+        // todo Отключаю инициализацию полей щита
+        this.textureShield = textureShieldButton;
+        this.rectangleShield = new Rectangle(550, 80, textureShieldButton.getRegionHeight(), textureShieldButton.getRegionWidth());
+        //this.textureShieldHealth = textureShieldHealth;
+        this.chargingShield = 0.0f;
+        this.maxShieldCharge = 5.0f; // секунд
     }
 
     @Override
@@ -91,6 +117,14 @@ public class Player extends Ship {
         batch.draw(texturePlayer, position.x - 32, position.y - 32, 32, 32, 64, 64, 1, 1, velocity.y / 30.0f);
 
         if (damageReaction > 0.01f) batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+        // todo Отключаю отрисовку полосы здоровья (2)
+        batch.draw(this.textureGreenBandOfHealth, rectangleShield.x, rectangleShield.y, (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
+        batch.setColor(1, 1, 1, 0.5f);
+        // todo Отключаю трисовку щита (1д)
+        batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
+        batch.setColor(1, 1, 1, 1);
     }
 
     /**
@@ -200,6 +234,21 @@ public class Player extends Ship {
         position.mulAdd(velocity, dt);
         hitArea.setPosition(position);
         velocity.scl(0.95f);
+
+
+        // todo Отключаю заряд щита и теакцию на клавишу М (12)
+        /* Заряжаем щит */
+        chargingShield += dt;
+        if (chargingShield >= this.maxShieldCharge) {
+            /* Если нажата кнопка SHIELD, то активировать щит */
+            if (mip.isTouchedInArea(rectangleShield) != -1 |
+                    Gdx.input.isKeyPressed(Input.Keys.M)) {
+                runShield();
+                chargingShield = 0.0f;
+                return;
+            }
+            chargingShield = this.maxShieldCharge;
+        }
     }
 
     @Override
