@@ -64,6 +64,9 @@ public class PowerUp {
             case SHIELD:
                 player.runShield();
                 break;
+            case BOMB:
+                player.runShield();
+                break;
         }
     }
 

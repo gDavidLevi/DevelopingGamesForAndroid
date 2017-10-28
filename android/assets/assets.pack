@@ -97,8 +97,8 @@ btFire
 btShield
   rotate: false
   xy: 260, 904
-  size: 160, 96
-  orig: 160, 96
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
 bullets36
@@ -110,14 +110,14 @@ bullets36
   index: -1
 ship64
   rotate: false
-  xy: 422, 904
+  xy: 358, 904
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 asteroid64
   rotate: false
-  xy: 938, 516
+  xy: 424, 904
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

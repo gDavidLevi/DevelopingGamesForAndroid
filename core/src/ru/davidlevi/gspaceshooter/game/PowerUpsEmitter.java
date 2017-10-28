@@ -48,7 +48,7 @@ public class PowerUpsEmitter {
                 /* Если плюшка неактивна, то... */
                 if (!powerUps[i].isActive()) {
                     /*... создаем случайную плюшку; */
-                    TypePowerUp type = TypePowerUp.values()[(int) (Math.random() * 5)];
+                    TypePowerUp type = TypePowerUp.values()[(int) (Math.random() * 6)];
                     /*... и активируем её. */
                     powerUps[i].activate(x, y, type);
                     break;

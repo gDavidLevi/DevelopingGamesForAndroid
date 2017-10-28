@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.StringBuilder;
 
@@ -21,6 +20,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 public class Player extends Ship {
     private TextureRegion textureRedBandOfHealth;
     private TextureRegion textureGreenBandOfHealth;
+    private TextureRegion textureShieldArea;
 
     /* Текущее количество жизни */
     private int currentLives;
@@ -41,22 +41,15 @@ public class Player extends Ship {
     private int money;
 
     /* Внутреннее время игрока */
-    //private float time;
+    private float innerTime;
 
-    // todo поля щита (5)
-    private TextureRegion textureShield;
-    private TextureRegion textureShieldHealth;
-    private float chargingShield;
-    private float maxShieldCharge;
-    private Rectangle rectangleShield;
-
-    /* Процессор ввода */
-    private MyInputProcessor mip;
-
-    {
-        this.mip = (MyInputProcessor) Gdx.input.getInputProcessor();
-    }
-
+    /* Управление щитом */
+    private Circle hitAreaShield;
+    private float maxTimeShieldCharge = 2.0f; // секунд
+    private boolean canRunShield = false;
+    private float scaleShield;
+    private float angleShield;
+    //private TypePowerUp typePowerUp;
 
     /**
      * @param gameScreen          экран игры
@@ -65,12 +58,13 @@ public class Player extends Ship {
      * @param textureJoystick     текстура джойстика
      * @param textureFireButton   текстура кнопки огонь
      * @param textureShieldButton текстура кнопки магия
+     * @param textureShieldArea   текстура щитового поля
      * @param fireSound           звук огня
      * @param position            позиция
      * @param velocity            скорость
      * @param enginePower         мощность
      */
-    public Player(GameScreen gameScreen, TextureRegion texturePlayer, TextureRegion textureBandOfHealth, TextureRegion textureJoystick, TextureRegion textureFireButton, TextureRegion textureShieldButton, Sound fireSound, Vector2 position, Vector2 velocity, float enginePower) {
+    public Player(GameScreen gameScreen, TextureRegion texturePlayer, TextureRegion textureBandOfHealth, TextureRegion textureJoystick, TextureRegion textureFireButton, TextureRegion textureShieldButton, TextureRegion textureShieldArea, Sound fireSound, Vector2 position, Vector2 velocity, float enginePower) {
         /* SpaceObject */
         super.maxHealth = 40;
         super.currentHealth = this.maxHealth;
@@ -87,10 +81,8 @@ public class Player extends Ship {
         this.texturePlayer = texturePlayer;
         this.textureRedBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 32, 224, 32);
         this.textureGreenBandOfHealth = new TextureRegion(textureBandOfHealth, 0, 0, 224, 32);
-        // todo Убираю возможность у джойстика управления щитом
-        //this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureShieldButton, this.textureGreenBandOfHealth);
-        this.joystick = new Joystick(this, textureJoystick, textureFireButton);
-
+        this.textureShieldArea = textureShieldArea;
+        this.joystick = new Joystick(this, textureJoystick, textureFireButton, textureShieldButton);
         this.fireSound = fireSound;
         this.position = position;
         this.velocity = velocity;
@@ -99,32 +91,23 @@ public class Player extends Ship {
         this.infoBandOfHealth = new StringBuilder(50);
         this.score = 0;
         this.money = 0;
-        //this.time = 0.0f;
-
-        // todo Отключаю инициализацию полей щита
-        this.textureShield = textureShieldButton;
-        this.rectangleShield = new Rectangle(550, 80, textureShieldButton.getRegionHeight(), textureShieldButton.getRegionWidth());
-        //this.textureShieldHealth = textureShieldHealth;
-        this.chargingShield = 0.0f;
-        this.maxShieldCharge = 5.0f; // секунд
+        this.scaleShield = 0.0f;
+        this.hitAreaShield = new Circle(position, scaleShield);
+        this.innerTime = 0.0f;
     }
 
     @Override
     public void render(SpriteBatch batch) {
+        /* Отрисовка игрока */
         if (damageReaction > 0.01f)
             batch.setColor(1.0f, 1.0f - damageReaction, 1.0f - damageReaction, 1.0f);
-
-        batch.draw(texturePlayer, position.x - 32, position.y - 32, 32, 32, 64, 64, 1, 1, velocity.y / 30.0f);
-
+        batch.draw(this.texturePlayer, position.x - 32, position.y - 32, 32, 32, 64, 64, 1, 1, velocity.y / 30.0f);
         if (damageReaction > 0.01f) batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-
-        // todo Отключаю отрисовку полосы здоровья (2)
-        batch.draw(this.textureGreenBandOfHealth, rectangleShield.x, rectangleShield.y, (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
-        batch.setColor(1, 1, 1, 0.5f);
-        // todo Отключаю трисовку щита (1д)
-        batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
-        batch.setColor(1, 1, 1, 1);
+        /* Отрисовка щита */
+        if (this.canRunShield)
+            batch.draw(this.textureShieldArea, position.x - 32, position.y - 32, 32, 32, 64, 64,
+                    scaleShield, scaleShield, angleShield);
     }
 
     /**
@@ -157,6 +140,12 @@ public class Player extends Ship {
         infoBandOfHealth.append("Score: ").append(score);
         bitmapFont.draw(batch, infoBandOfHealth, x + 4, y - 4);
 
+        /* Зарядка щита */
+        infoBandOfHealth.setLength(0);
+        infoBandOfHealth.append("Shield charge: ").append((int) (innerTime * 100f / this.maxTimeShieldCharge)).append(" %");
+        bitmapFont.draw(batch, infoBandOfHealth, x + 4, y - 48);
+        //batch.draw(this.textureGreenBandOfHealth, x, y, (innerTime * 100f / this.maxTimeShieldCharge), 16);
+
         /* Джойстик */
         joystick.render(batch);
     }
@@ -171,12 +160,11 @@ public class Player extends Ship {
 
     @Override
     public void update(float dt) {
+        this.innerTime += dt;
         joystick.update(dt);
-
-        /* Щит */
-//        time += dt;
-//        for (int i = 0; i < 10; i++)
-//            gameScreen.getParticleEmitter().setup(position.x + 32 * (float) Math.cos(time * 5 + i * 0.628f), position.y + 32 * (float) Math.sin(time * 5 + i * 0.628f), MathUtils.random(-10, 10), MathUtils.random(-10, 10), 0.2f, 0.8f, 1.1f, 0, 0, 1, 1, 1, 1, 1, 1);
+        position.mulAdd(velocity, dt);
+        hitArea.setPosition(position);
+        velocity.scl(0.95f);
 
         /* Увеличить скорость движения игрока в зависимости от положения стика джойстика */
         if (joystick.getPower() > 0.02f) {
@@ -199,6 +187,9 @@ public class Player extends Ship {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.L)) {
             pressFire(dt);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.M)) {
+            runShield(/*TypePowerUp.SHIELD*/);
         }
 
         /* Изменить цвет из-за столкновения */
@@ -231,24 +222,36 @@ public class Player extends Ship {
                     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         }
 
-        position.mulAdd(velocity, dt);
-        hitArea.setPosition(position);
-        velocity.scl(0.95f);
+        /* Спросим у джойстика, нажата ли кнопка огонь */
+        if (joystick.isActivateFireButton()) pressFire(dt);
 
-
-        // todo Отключаю заряд щита и теакцию на клавишу М (12)
-        /* Заряжаем щит */
-        chargingShield += dt;
-        if (chargingShield >= this.maxShieldCharge) {
-            /* Если нажата кнопка SHIELD, то активировать щит */
-            if (mip.isTouchedInArea(rectangleShield) != -1 |
-                    Gdx.input.isKeyPressed(Input.Keys.M)) {
-                runShield();
-                chargingShield = 0.0f;
-                return;
+        /* Щит */
+        if (innerTime >= this.maxTimeShieldCharge) {
+            /* Активируем щит от джойстика или после нажатия на клавишу М */
+            if (joystick.isActivateShieldButton()) this.canRunShield = true;
+            /* ... */
+            if (this.canRunShield) {
+                /* Поворачиваем щит */
+                this.angleShield = (float) Math.random() * 360.0f;
+                /* Увеличиваем щит */
+                scaleShield += dt * 4.0f;
+                if (scaleShield > 8.0f) {
+                    /* Дезактивируем щит */
+                    joystick.desactivateShieldButton();
+                    this.canRunShield = false;
+                    this.scaleShield = 0.0f;
+                    innerTime = 0.0f;
+                    return; // выйти из всех условий!
+                }
             }
-            chargingShield = this.maxShieldCharge;
+            innerTime = this.maxTimeShieldCharge; // =5 секунд
         }
+        /* Зона контакта щита */
+        this.hitAreaShield.set(position, this.scaleShield * 32f);
+        /* Расчет щита */
+//        scaleShield += dt;
+//        for (int i = 0; i < 10; i++)
+//            gameScreen.getParticleEmitter().setup(position.x + 32 * (float) Math.cos(scaleShield * 5 + i * 0.628f), position.y + 32 * (float) Math.sin(scaleShield * 5 + i * 0.628f), MathUtils.random(-10, 10), MathUtils.random(-10, 10), 0.2f, 0.8f, 1.1f, 0, 0, 1, 1, 1, 1, 1, 1);
     }
 
     @Override
@@ -262,6 +265,10 @@ public class Player extends Ship {
     public void fire() {
         super.fire();
         fireSound.play();
+    }
+
+    public Circle getHitAreaShield() {
+        return hitAreaShield;
     }
 
     public void setPosition(Vector2 newPosition) {
@@ -300,7 +307,8 @@ public class Player extends Ship {
         fireSound.dispose();
     }
 
-    public void runShield() {
-        this.gameScreen.getShieldEmitter().setup();
+    public void runShield(/*TypePowerUp.SHIELD*/) {
+        this.canRunShield = true;
+        //this.typePowerUp = typePowerUp;
     }
 }

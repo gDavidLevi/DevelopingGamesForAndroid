@@ -1,7 +1,6 @@
 package ru.davidlevi.gspaceshooter.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,18 +14,15 @@ public class Joystick {
     private TextureRegion textureBase;
     private TextureRegion textureStick;
     private TextureRegion textureFire;
+    private TextureRegion textureShieldButton;
 
-    // todo поля щита (5)
-    //private TextureRegion textureShield;
-    //private TextureRegion textureShieldHealth;
-    //private float chargingShield;
-    //private float maxShieldCharge;
-    //private Rectangle rectangleShield;
+    /* Кнопка щит */
+    private Rectangle rectangleShield;
 
     /* Кнопка джойстика */
     private Rectangle rectangleJoystick;
 
-    /* Кнопки */
+    /* Кнопка огонь */
     private Rectangle rectangleFire;
 
     /* Центр джойстика */
@@ -42,6 +38,10 @@ public class Joystick {
     /* Направление textureStick */
     private Vector2 norm;
 
+    /**/
+    private boolean isActivateShieldButton = false;
+    private boolean isActivateFireButton = false;
+
     /* Процессор ввода */
     private MyInputProcessor mip;
 
@@ -54,7 +54,7 @@ public class Joystick {
      * @param textureJoystick текстура джойстика
      * @param textureFire     текстура кнопки ОГОНЬ
      */
-    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire) {
+    public Joystick(Player player, TextureRegion textureJoystick, TextureRegion textureFire, TextureRegion textureShieldButton) {
         this.player = player;
 
         this.textureBase = new TextureRegion(textureJoystick, 0, 0, 200, 200);
@@ -65,12 +65,8 @@ public class Joystick {
         this.textureFire = textureFire;
         this.rectangleFire = new Rectangle(1050, 70, textureFire.getRegionHeight(), textureFire.getRegionWidth());
 
-        // todo Отключаю инициализацию полей щита
-        //this.textureShield = textureShield;
-        //this.rectangleShield = new Rectangle(550, 80, textureShield.getRegionHeight(), textureShield.getRegionWidth());
-        //this.textureShieldHealth = textureShieldHealth;
-        //this.chargingShield = 0.0f;
-        //this.maxShieldCharge = 5.0f; // секунд
+        this.textureShieldButton = textureShieldButton;
+        this.rectangleShield = new Rectangle(1185, 0, textureShieldButton.getRegionHeight(), textureShieldButton.getRegionWidth());
 
         this.joyCenterX = rectangleJoystick.x + rectangleJoystick.width / 2;
         this.joyCenterY = rectangleJoystick.y + rectangleJoystick.height / 2;
@@ -83,16 +79,11 @@ public class Joystick {
     }
 
     public void render(SpriteBatch batch) {
-        // todo Отключаю отрисовку полосы здоровья (2)
-        //batch.draw(textureShieldHealth, rectangleShield.x, rectangleShield.y, (chargingShield * rectangleShield.getHeight() / this.maxShieldCharge), 16);
-        //batch.setColor(1, 1, 1, 0.5f);
+        batch.setColor(1, 1, 1, 0.6f);
         batch.draw(textureBase, rectangleJoystick.x, rectangleJoystick.y);
-        batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureStick, joyCenterX + offset.x - 25, joyCenterY + offset.y - 25);
-        batch.setColor(1, 1, 1, 0.7f);
         batch.draw(textureFire, rectangleFire.x, rectangleFire.y);
-        // todo Отключаю трисовку щита (1д)
-        //batch.draw(textureShield, rectangleShield.x, rectangleShield.y);
+        batch.draw(textureShieldButton, rectangleShield.x, rectangleShield.y);
         batch.setColor(1, 1, 1, 1);
     }
 
@@ -121,21 +112,33 @@ public class Joystick {
         norm.set(offset).nor();
 
         /* Если зажата кнопка FIRE, то производить огонь */
-        if (mip.isTouchedInArea(rectangleFire) != -1) player.pressFire(dt);
+        if (mip.isTouchedInArea(rectangleFire) != -1) this.isActivateFireButton = true;
+        else this.isActivateFireButton = false;
 
-        // todo Отключаю заряд щита и теакцию на клавишу М (12)
-        /* Заряжаем щит */
-//        chargingShield += dt;
-//        if (chargingShield >= this.maxShieldCharge) {
-//            /* Если нажата кнопка SHIELD, то активировать щит */
-//            if (mip.isTouchedInArea(rectangleShield) != -1 |
-//                    Gdx.input.isKeyPressed(Input.Keys.M)) {
-//                player.runShield();
-//                chargingShield = 0.0f;
-//                return;
-//            }
-//            chargingShield = this.maxShieldCharge;
-//        }
+        /* Нажата кнопка SHIELD */
+        this.isActivateShieldButton = mip.isTouchedInArea(rectangleShield) != -1;
+    }
+
+    /**
+     * Кнопка огонь нажата?
+     *
+     * @return boolean
+     */
+    public boolean isActivateFireButton() {
+        return isActivateFireButton;
+    }
+
+    /**
+     * Кнопка щита нажата?
+     *
+     * @return boolean
+     */
+    public boolean isActivateShieldButton() {
+        return this.isActivateShieldButton;
+    }
+
+    public void desactivateShieldButton() {
+        isActivateShieldButton = false;
     }
 
     /**

@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
         shieldEmitter = new ShieldEmitter(this, atlas.findRegion("shield"), 1);
 
         atlasMenu = atlas.findRegion("btMenu");
-        rectanlgeMenu = new Rectangle(20, 490, atlasMenu.getRegionWidth(), atlasMenu.getRegionHeight());
+        rectanlgeMenu = new Rectangle(0, 485, atlasMenu.getRegionWidth(), atlasMenu.getRegionHeight());
 
         this.currentLevelTime = 0.0f;
         this.timePerLevel = 60.0f; // 60 секунд на 1 уровень
@@ -131,6 +131,7 @@ public class GameScreen implements Screen {
                 atlas.findRegion("joystick"),
                 atlas.findRegion("btFire"),
                 atlas.findRegion("btShield"),
+                atlas.findRegion("shield"),
                 Assets.getInstance().assetManager.get("laser.wav", Sound.class),
                 new Vector2(100, 328),
                 new Vector2(0.0f, 0.0f),
@@ -338,25 +339,14 @@ public class GameScreen implements Screen {
                 asteroid.takeDamage(1);
                 player.takeDamage(1);
             }
-        }
-
-        /* Щит + астероиды */
-        int quantityActivesShields = shieldEmitter.getActiveList().size();
-        for (int i = 0; i < quantityActivesShields; i++) {
-            Shield shield = shieldEmitter.getActiveList().get(i);
-            int quantity = asteroidEmitter.getActiveList().size();
-            for (int j = 0; j < quantity; j++) {
-                Asteroid asteroid = asteroidEmitter.getActiveList().get(j);
-                /* Если попал в зону щита, то... */
-                if (shield.getHitArea().contains(asteroid.getPosition())) {
-                    /*... и если астероид уничтожен, то... */
-                    if (asteroid.takeDamage(5)) {
-                        /*... вознарадить игрока: */
-                        player.addScore(asteroid.getMaxHealth() * 10);
-                        powerUpsEmitter.makePower(asteroid.getPosition().x, asteroid.getPosition().y);
-                        boomEmitter.setup(asteroid.getPosition());
-                    }
-                    break;
+            /* Щит игрока + астероид */
+            if (player.getHitAreaShield().contains(asteroid.getPosition())) {
+                /*... и если астероид уничтожен, то... */
+                if (asteroid.takeDamage(5)) {
+                    /*... вознарадить игрока: */
+                    player.addScore(asteroid.getMaxHealth() * 10);
+                    powerUpsEmitter.makePower(asteroid.getPosition().x, asteroid.getPosition().y);
+                    boomEmitter.setup(asteroid.getPosition());
                 }
             }
         }
@@ -367,12 +357,17 @@ public class GameScreen implements Screen {
             PowerUp powerUp = powerUpsEmitter.getPowerUps()[i];
             /* Если вознаграждение активно, и... */
             if (powerUp.isActive()) {
-                /*... если игрок пересекся с PowerUp'ом, то... */
-                if (player.getHitArea().contains(powerUp.getPosition())) {
-                    /*... начислить PowerUp'с игроку. */
+                /*... если тип именно BOMB, то... */
+                if (powerUp.getType() == TypePowerUp.BOMB) {
                     powerUp.accrue(player);
                     powerUp.deactivate();
-                }
+                } else
+                    /*... если игрок пересекся с PowerUp'ом, то... */
+                    if (player.getHitArea().contains(powerUp.getPosition())) {
+                    /*... начислить PowerUp'с игроку. */
+                        powerUp.accrue(player);
+                        powerUp.deactivate();
+                    }
             }
         }
 
